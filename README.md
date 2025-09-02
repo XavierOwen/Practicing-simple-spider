@@ -21,5 +21,13 @@ python scraper-12-brackets.py
 [原文链接](https://zh.wikisource.org/zh-hans/%E8%81%96%E7%B6%93_(%E6%96%87%E7%90%86%E5%92%8C%E5%90%88))
 
 ```bash
-python scrapy-high-wenli-union-Bible.py
+python scraper-high-wenli-union-Bible.py
+```
+
+## 约翰福音讲道录
+
+[原文链接](https://www.newadvent.org/fathers/1701.htm)
+
+```bash
+python scraper-lectures-on-the-Gospel-of-John.py
 ```
