@@ -1,0 +1,15 @@
+{
+  "pdf_options": {
+    "outline": true,
+    "format": "Letter",
+    "margin": {
+      "top": "0.8in",
+      "bottom": "0.8in",
+      "left": "0.8in",
+      "right": "0.8in"
+    },
+    "displayHeaderFooter": true,
+    "headerTemplate": "<div></div>",
+    "footerTemplate": "<div style='font-size:9px; width:100%; text-align:center;'><span class='pageNumber'></span> / <span class='totalPages'></span></div>"
+  }
+}
