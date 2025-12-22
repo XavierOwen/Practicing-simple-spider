@@ -1,5 +1,6 @@
 import requests
-from bs4 import BeautifulSoup, NavigableString, Tag
+from bs4 import BeautifulSoup, Tag
+from bs4.element import NavigableString
 from urllib.parse import urljoin
 import re
 
@@ -23,10 +24,12 @@ def extract_main_links(html: str, base_url: str) -> list[str]:
         table3 = soup.select_one('#table3, a[name="table3"], [name="table3"]')
         if table3 and table3.name == "a":
             table3 = table3.parent
+    if not isinstance(table3, Tag):
+        return []
     anchors = table3.find_all("a", href=True)
-    anchors = [a for a in anchors if not a["href"].startswith("#")]
+    anchors = [a for a in anchors if isinstance(a, Tag) and not str(a.get("href", "")).startswith("#")]
     anchors = anchors[1:14]  # 你修过的范围
-    return [urljoin(base_url, a["href"]) for a in anchors]
+    return [urljoin(base_url, str(a["href"])) for a in anchors]
 
 def extract_sub_anchors(html: str):
     """子页：返回 12 个 <a> 标签（对象），用于拿标题文本和链接"""
@@ -34,7 +37,7 @@ def extract_sub_anchors(html: str):
     td = soup.find("td", attrs={"colspan": "5"})
     if not td:
         td = soup.find("td", attrs={"colspan": "4"})
-    if not td:
+    if not td or not isinstance(td, Tag):
         return []
     anchors = td.find_all("a", href=True)
     return anchors[:12]
@@ -131,9 +134,15 @@ def build_book_markdown() -> str:
 
         # 若不足 12 个锚点，按实际数量写
         for a in anchors:
+            if not isinstance(a, Tag):
+                continue
             title_full = a.get_text(" ", strip=True)
             title = anchor_title_after_dunhao(title_full) or title_full
-            link = urljoin(vol_url, a["href"])
+            href = a.get("href")
+            if href:
+                link = urljoin(vol_url, str(href))
+            else:
+                continue
 
             # 抓内容页的第三个 <p>
             page_html = fetch_html(link)

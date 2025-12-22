@@ -8,7 +8,7 @@ cd Practicing-simple-spider
 pip install -r requirements.txt
 ```
 
-转换pdf最好使用npm的markdown-pdf，以生成可以使用的书签和超链接。
+转换pdf最好使用npm的markdown-pdf，以生成可以点击跳转的**书签**。
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -16,7 +16,7 @@ brew install node
 npm i -g md-to-pdf
 ```
 
-vscode插件Markdown All in One可以自动生成目录在markdown文件内
+vscode插件Markdown All in One可以自动生成目录在markdown文件，建议放在heading 1下方，方便读者回到首页点击链接，而不是从pdf阅读器提供的书签功能再去跳转。
 
 ## 十二篮
 
@@ -42,4 +42,13 @@ python scraper-high-wenli-union-Bible.py
 
 ```bash
 python scraper-lectures-on-the-Gospel-of-John.py
+```
+
+## 马太福音查经记录
+
+[原文链接](http://lightinnj.org/%E5%80%AA%E6%9F%9D%E8%81%B2%E6%96%87%E9%9B%86/%E5%80%AA%E6%9F%9D%E8%81%B2%E6%96%87%E9%9B%86%E7%AC%AC%E4%B8%80%E8%BE%91/15%E9%A9%AC%E5%A4%AA%E7%A6%8F%E9%9F%B3%E6%9F%A5%E7%BB%8F%E8%AE%B0%E5%BD%95/%E9%A9%AC%E5%A4%AA%E7%A6%8F%E9%9F%B3%E6%9F%A5%E7%BB%8F%E8%AE%B0%E5%BD%95%E7%9B%AE%E5%BD%95.htm)
+
+```bash
+python python scraper-Mattew-Study-Nee.py
+md-to-pdf 马太福音查经记录.md --config-file md2pdf.json
 ```
