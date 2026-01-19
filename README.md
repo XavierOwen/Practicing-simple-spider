@@ -52,3 +52,12 @@ python scraper-lectures-on-the-Gospel-of-John.py
 python python scraper-Mattew-Study-Nee.py
 md-to-pdf 马太福音查经记录.md --config-file md2pdf.json
 ```
+
+## 教会的事务
+
+[原文链接](https://ezoe.work/books/3/3007.html)
+
+```bash
+python scraper-church-affairs.py
+md-to-pdf 教会的事务.md --config-file md2pdf.json
+```
