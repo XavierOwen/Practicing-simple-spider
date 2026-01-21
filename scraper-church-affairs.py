@@ -107,18 +107,18 @@ def extract_page_content(html: str) -> str:
             continue
 
         # Check if this is a cn1 section heading (H3)
-        if child.has_class('cn1'):
+        if 'cn1' in child.get('class', []):
             heading_text = child.get_text(strip=True)
             lines.append(f"\n### {heading_text}\n")
 
         # Check if this is a cn2 subsection heading (H4)
-        elif child.has_class('cn2'):
+        elif 'cn2' in child.get('class', []):
             heading_text = child.get_text(strip=True)
             lines.append(f"\n#### {heading_text}\n")
 
-        # Otherwise, this is a content paragraph
-        elif child.name == 'div':
-            # Extract text content, handling nested tags
+        # Check if this is a content paragraph with 'cont' class
+        elif 'cont' in child.get('class', []):
+            # Extract text content from cont div
             content_parts = []
 
             for elem in child.descendants:
@@ -136,6 +136,53 @@ def extract_page_content(html: str) -> str:
             if content:
                 lines.append(content)
                 lines.append("")  # Add paragraph break
+                lines.append("")  # Add extra line break for better separation
+
+        # Otherwise, this is a plain content paragraph
+        elif child.name == 'div':
+            # This could be a container div (like id='c') with nested cont divs
+            # Check if it has cont children
+            cont_children = [c for c in child.children if isinstance(c, Tag) and 'cont' in c.get('class', [])]
+
+            if cont_children:
+                # Process each cont child separately
+                for cont_child in cont_children:
+                    content_parts = []
+                    for elem in cont_child.descendants:
+                        if isinstance(elem, NavigableString):
+                            text = str(elem).strip()
+                            if text:
+                                content_parts.append(text)
+                        elif isinstance(elem, Tag) and elem.name == 'br':
+                            content_parts.append(' ')
+
+                    content = ' '.join(content_parts)
+                    content = re.sub(r'\s+', ' ', content).strip()
+
+                    if content:
+                        lines.append(content)
+                        lines.append("")  # Add paragraph break
+                        lines.append("")  # Add extra line break for better separation
+            else:
+                # Regular div without cont children - process normally
+                content_parts = []
+
+                for elem in child.descendants:
+                    if isinstance(elem, NavigableString):
+                        text = str(elem).strip()
+                        if text:
+                            content_parts.append(text)
+                    elif isinstance(elem, Tag) and elem.name == 'br':
+                        content_parts.append(' ')
+
+                # Join and clean the content
+                content = ' '.join(content_parts)
+                content = re.sub(r'\s+', ' ', content).strip()
+
+                if content:
+                    lines.append(content)
+                    lines.append("")  # Add paragraph break
+                    lines.append("")  # Add extra line break for better separation
 
     # Join lines and clean up excessive spacing
     md = "\n".join(lines)
